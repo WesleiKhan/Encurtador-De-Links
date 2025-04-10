@@ -51,6 +51,6 @@ public class Link {
     }
 
     public void setClicks(Integer clicks) {
-        this.clicks = clicks;
+        this.clicks += clicks;
     }
 }

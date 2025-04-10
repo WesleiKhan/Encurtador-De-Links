@@ -3,10 +3,7 @@ package com.example.linkShortener.controller;
 import com.example.linkShortener.service.DTOs.LinkResponseDTO;
 import com.example.linkShortener.service.LinkService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api")
@@ -25,5 +22,13 @@ public class LinkController {
         LinkResponseDTO response = linkService.createShortLink(url);
 
         return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/redirect")
+    public ResponseEntity<String> redirectLink(@RequestBody String url) {
+
+        String originalUrl = linkService.redirectUrl(url);
+
+        return ResponseEntity.status(302).body(originalUrl);
     }
 }

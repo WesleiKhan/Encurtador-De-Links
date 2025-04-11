@@ -34,9 +34,9 @@ public class LinkService {
         return new LinkResponseDTO(response.shortUrl(), link);
     }
 
-    public String redirectUrl(String url) {
+    public String redirectUrl(String code) {
 
-        String code = urlCodeExtration(url);
+        /*String code = urlCodeExtration(url);*/
 
         Link originalLink = linkRepository.findByShortCode(code).orElseThrow();
 
@@ -48,7 +48,7 @@ public class LinkService {
     }
 
     private FormatUrlWithCodeResponse formatUrlWithCode() {
-        String base = "https://short.local/";
+        String base = "http://localhost:8080/api/redirect/";
         String code = urlShortenerService.generatedUniqueCode();
 
         return new FormatUrlWithCodeResponse(base + code, code);

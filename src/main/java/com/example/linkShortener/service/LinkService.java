@@ -9,9 +9,6 @@ import com.example.linkShortener.service.DTOs.LinkResponseDTO;
 import com.example.linkShortener.service.DTOs.UrlOriginalEntry;
 import org.springframework.stereotype.Service;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @Service
 public class LinkService {
 
@@ -46,13 +43,15 @@ public class LinkService {
         Link originalLink = linkRepository.findByShortCode(code)
                 .orElseThrow(LinkNotFound::new);
 
+        originalLink.incrementClicks();
+
         linkRepository.save(originalLink);
 
         return originalLink.getOriginalUrl().replace("\"", "").trim();
     }
 
     private FormatUrlWithCodeResponse formatUrlWithCode() {
-        String base = "http://localhost:8080/api/redirect/";
+        String base = "http://short.local/";
         String code = urlShortenerService.generatedUniqueCode();
 
         return new FormatUrlWithCodeResponse(base + code, code);

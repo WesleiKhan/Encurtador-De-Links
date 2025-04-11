@@ -39,7 +39,6 @@ public class Link {
     }
 
     public String getOriginalUrl() {
-        setClicks(1);
         return originalUrl;
     }
 
@@ -51,7 +50,11 @@ public class Link {
         return clicks;
     }
 
+    public void incrementClicks() {
+        this.clicks++;
+    }
+
     public void setClicks(Integer clicks) {
-        this.clicks += clicks;
+        this.clicks = clicks;
     }
 }

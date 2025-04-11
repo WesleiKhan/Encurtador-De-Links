@@ -39,6 +39,7 @@ public class Link {
     }
 
     public String getOriginalUrl() {
+        setClicks(1);
         return originalUrl;
     }
 

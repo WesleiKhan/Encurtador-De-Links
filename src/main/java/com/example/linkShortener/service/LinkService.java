@@ -1,9 +1,12 @@
 package com.example.linkShortener.service;
 
+import com.example.linkShortener.exceptions.InvalidEntryException;
+import com.example.linkShortener.exceptions.LinkNotFound;
 import com.example.linkShortener.model.Link;
 import com.example.linkShortener.repositorie.LinkRepository;
 import com.example.linkShortener.service.DTOs.FormatUrlWithCodeResponse;
 import com.example.linkShortener.service.DTOs.LinkResponseDTO;
+import com.example.linkShortener.service.DTOs.UrlOriginalEntry;
 import org.springframework.stereotype.Service;
 
 import java.util.regex.Matcher;
@@ -23,28 +26,29 @@ public class LinkService {
         this.urlShortenerService = urlShortenerService;
     }
 
-    public LinkResponseDTO createShortLink(String link) {
+    public LinkResponseDTO createShortLink(UrlOriginalEntry link) {
+
+        if(link.url().trim().isEmpty()) {
+            throw new InvalidEntryException();
+        }
 
         FormatUrlWithCodeResponse response = formatUrlWithCode();
 
-        Link newLink = new Link(response.code(), link);
+        Link newLink = new Link(response.code(), link.url());
 
         linkRepository.save(newLink);
 
-        return new LinkResponseDTO(response.shortUrl(), link);
+        return new LinkResponseDTO(response.shortUrl(), link.url());
     }
 
     public String redirectUrl(String code) {
 
-        /*String code = urlCodeExtration(url);*/
-
-        Link originalLink = linkRepository.findByShortCode(code).orElseThrow();
-
-        originalLink.setClicks(1);
+        Link originalLink = linkRepository.findByShortCode(code)
+                .orElseThrow(LinkNotFound::new);
 
         linkRepository.save(originalLink);
 
-        return originalLink.getOriginalUrl();
+        return originalLink.getOriginalUrl().replace("\"", "").trim();
     }
 
     private FormatUrlWithCodeResponse formatUrlWithCode() {
@@ -54,17 +58,4 @@ public class LinkService {
         return new FormatUrlWithCodeResponse(base + code, code);
     }
 
-    private String urlCodeExtration(String link) {
-        String regex = "https://short\\.local/([a-zA-Z0-9]+)";
-
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(link);
-
-        if(!matcher.find()) {
-
-            throw new RuntimeException("Url invalida.");
-        }
-
-       return matcher.group(1);
-    }
 }

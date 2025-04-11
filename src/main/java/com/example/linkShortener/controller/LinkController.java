@@ -1,5 +1,6 @@
 package com.example.linkShortener.controller;
 
+import com.example.linkShortener.service.DTOs.UrlOriginalEntry;
 import com.example.linkShortener.service.DTOs.LinkResponseDTO;
 import com.example.linkShortener.service.LinkService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,7 +21,7 @@ public class LinkController {
     }
 
     @PostMapping("/shorten")
-    public ResponseEntity<LinkResponseDTO> shorten(@RequestBody String url) {
+    public ResponseEntity<LinkResponseDTO> shorten(@RequestBody UrlOriginalEntry url) {
 
         LinkResponseDTO response = linkService.createShortLink(url);
 
@@ -33,8 +34,6 @@ public class LinkController {
 
         String originalUrl = linkService.redirectUrl(code);
 
-        String url = originalUrl.replace("\"", "").trim();
-
-        response.sendRedirect(url);
+        response.sendRedirect(originalUrl);
     }
 }

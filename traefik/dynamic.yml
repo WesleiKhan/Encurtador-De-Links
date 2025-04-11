@@ -1,0 +1,14 @@
+http:
+  routers:
+    short-router:
+      rule: "Host(`short.local`)"
+      service: short-service
+      entryPoints:
+        - web
+
+  services:
+    short-service:
+      loadBalancer:
+        servers:
+          - url: "http://linkshortener-app:8080"
+

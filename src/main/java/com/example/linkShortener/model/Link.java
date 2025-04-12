@@ -1,5 +1,6 @@
 package com.example.linkShortener.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,6 +9,7 @@ public class Link {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @JsonIgnore
     private String id;
 
     @Column(name = "short_code")

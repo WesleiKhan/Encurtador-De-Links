@@ -9,6 +9,8 @@ import com.example.linkShortener.service.DTOs.LinkResponseDTO;
 import com.example.linkShortener.service.DTOs.UrlOriginalEntry;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LinkService {
 
@@ -36,6 +38,11 @@ public class LinkService {
         linkRepository.save(newLink);
 
         return new LinkResponseDTO(response.shortUrl(), link.url());
+    }
+
+    public List<Link> seeLinks() {
+
+        return linkRepository.findAll();
     }
 
     public String redirectUrl(String code) {
